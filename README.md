@@ -16,6 +16,7 @@ Product Owners:
 - Christian Nelson (if Mike's unavailable)
 
 [Project (Pivotal Tracker)](https://www.pivotaltracker.com/projects/540409)
+[![Analytics](https://ga-beacon.appspot.com/UA-620051-20/boardroom/README?pixel)]()
 
 ### Git Branching Strategy
 
