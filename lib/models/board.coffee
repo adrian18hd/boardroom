@@ -74,6 +74,18 @@ BoardSchema.methods =
     up = ( if up.getTime() > card.updated.getTime() then up else card.updated ) for card in @cards()
     up
 
+  toCSV: ->
+    board = @toObject getters: true
+    csvData = []
+    csvData.push ['Group', 'Card']
+    for group in board.groups
+      for card in group.cards
+        cardData = []
+        cardData.push group.name
+        cardData.push card.text
+        csvData.push cardData
+    csvData
+
   updateAttributes: (attributes, callback) ->
     for attribute in ['name'] when attributes[attribute]?
       @[attribute] = attributes[attribute]
