@@ -21,6 +21,11 @@ include ./layout.jade
                 span.icon-link
                 span.tooltip Copy URL for this board.
             li
+              span.download
+                a(href="/boards/#{board._id}/csv" target='csv')
+                  span.icon-download
+                  span.tooltip Download to CSV
+            li
               span.help.icon-info
                 span.tooltip 
                   | Invite others to participate by copying the url or clicking on the link icon to the left.
