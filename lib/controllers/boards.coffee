@@ -31,6 +31,18 @@ class BoardsController extends ApplicationController
     catch error
       return @throw500 response, error
 
+  downloadCSV: (request, response) =>
+    userIdentity = request.user.activeIdentity
+    loglevel = request.param 'loglevel'
+    try
+      id = request.params.id
+      Board.findById id, (err, boardModel) =>
+        throw err if err
+        return @throw404 response unless boardModel?
+        response.csv boardModel.toCSV()
+    catch error
+      return @throw500 response, error
+
   warm: (request, response) =>
     @throw404 response
 

@@ -80,8 +80,9 @@
         }
       }
 
-      .help, .copy-url {
+      .help, .copy-url, .download {
         float:right;
+        text-align: center;
         line-height: 45px;
         font-size: 25px;
         margin: 0px;
@@ -91,8 +92,16 @@
         padding: 0px 14px;
       }
 
+      a {
+        color: white;
+        text-decoration: none
+      }
+      .download {
+        padding: 0 12px;
+      }
       .user-id,
       .copy-url,
+      .download,
       .icon-info,
       .logout {
         color: white;
@@ -136,7 +145,7 @@
         }
       }
 
-      .copy-url, .icon-info {
+      .copy-url, .download, .icon-info {
         font-size: 20px;
         line-height: 45px;
         border-right: solid 1px rgba(255, 255, 255, .2);

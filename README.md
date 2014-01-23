@@ -60,9 +60,11 @@ Deployment uses Capistrano. Acceptance is the default stage.
     cp .env.template .env
     # start mongo. for instructions: brew info mongodb
     # start redis. for instructions: brew info redis
+    # modify .env with social keys
+    # add domain to /etc/hosts   127.0.0.1       local.stickies.io
     nf start -p 7777
 
-Visit [localhost:7777](http://localhost:7777).
+Visit [local.stickies.io:7777](http://local.stickies.io:7777).
 
 #### With Details
 
