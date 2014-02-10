@@ -55,34 +55,40 @@ Deployment uses Capistrano. Acceptance is the default stage.
     brew install mongodb
     brew install redis
     brew install node
-    npm install -g foreman
     npm install
-    cp .env.template .env
     # start mongo. for instructions: brew info mongodb
     # start redis. for instructions: brew info redis
-    # modify .env with social keys
-    # add domain to /etc/hosts   127.0.0.1       local.stickies.io
-    nf start -p 7777
+    # setup ENV variables (see below)
+    node ./index.js
 
-Visit [local.stickies.io:7777](http://local.stickies.io:7777).
+Visit [localhost:7777](http://localhost:7777).
 
 #### With Details
 
-1. Make sure you have the latest [Homebrew](http://mxcl.github.com/homebrew/) and formulae:  
+1. Make sure you have the latest [Homebrew](http://mxcl.github.com/homebrew/) and formulae:
    `brew update`
-2. Install [MongoDB](http://www.mongodb.org/) with Homebrew:  
+2. Install [MongoDB](http://www.mongodb.org/) with Homebrew:
    `brew install mongodb`
 3. Follow homebrew's instructions to run Mongo. They're printed after installation; view them again with `brew info mongodb`.
-4. Install [Redis](http://redis.io/) with Homebrew:  
+4. Install [Redis](http://redis.io/) with Homebrew:
    `brew install redis`
 5. Follow homebrew's instructions to run Redis. They're printed after installation; view them again with `brew info redis`.
-6. Install [Node.js](http://nodejs.org/) with Homebrew:  
+6. Install [Node.js](http://nodejs.org/) with Homebrew:
    `brew install node`
-7. Install project dependencies using npm:  
+7. Install project dependencies using npm:
    `npm install`
-8. Run Boardroom:  
+8. Add the [required environment variables](#required-environment-variables) to your shell config (ex: `~/.bashrc`)
+9. Run Boardroom:
    `node ./index.js`
-9. Visit [localhost:7777](http://localhost:7777).
+10. Visit [localhost:7777](http://localhost:7777).
+
+#### Required Environment Variables
+To support the various OAuth schemes, add the matching client keys to the
+following environment variables:
+
+    export TWITTER_SECRET='<your Twitter secret>'
+    export GOOGLE_CLIENT_SECRET='<your Google client secret>'
+    export FACEBOOK_APP_SECRET='<your Facebook app secret>'
 
 ### Ubuntu / Debian
 
