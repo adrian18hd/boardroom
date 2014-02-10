@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "async": "0.2.6",
-    "jasmine-node": "1.5.x",
+    "jasmine-node": "~1.13.1",
     "sinon": "1.6",
     "factory-lady": "git://github.com/carbonfive/factory-lady.git",
     "superagent": "latest",
