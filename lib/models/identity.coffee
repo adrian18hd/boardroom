@@ -1,4 +1,5 @@
 { mongoose } = require './db'
+passwordHash = require 'password-hash'
 
 identitySchema = new mongoose.Schema
   source: String
@@ -7,6 +8,13 @@ identitySchema = new mongoose.Schema
   displayName: String
   avatar: String
   email: String
+  password: String
+
+identitySchema.methods.generateHash = (password) ->
+  return passwordHash.generate(password)
+
+identitySchema.methods.validPassword = (password) ->
+  return passwordHash.verify(password, @password)
 
 Identity = mongoose.model 'Identity', identitySchema
 
