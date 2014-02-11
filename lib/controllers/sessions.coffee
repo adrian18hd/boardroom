@@ -22,15 +22,19 @@ class SessionsController extends ApplicationController
     for filename in providers
       do (filename)=>
         providerAuthenticator = require "../services/authentication/providers/#{filename}"
-        if providerAuthenticator.isConfigured()
-          try
-            passport.use providerAuthenticator.passportStrategy()
-            @authenticators[providerAuthenticator.name] = providerAuthenticator
-            logger.debug -> "auth: registered #{providerAuthenticator.name} provider"
-          catch e
-            logger.warn -> "auth: error regsitering #{providerAuthenticator.name} provider - #{e.message}"
+        if providerAuthenticator.oauth
+          if providerAuthenticator.isConfigured()
+            try
+              passport.use providerAuthenticator.passportStrategy()
+              @authenticators[providerAuthenticator.name] = providerAuthenticator
+              logger.debug -> "auth: registered #{providerAuthenticator.name} provider"
+            catch e
+              logger.warn -> "auth: error regsitering #{providerAuthenticator.name} provider - #{e.message}"
+          else
+            logger.warn -> "auth: unable to register #{providerAuthenticator.name} provider - not configured"
         else
-          logger.warn -> "auth: unable to register #{providerAuthenticator.name} provider - not configured"
+          passport.use providerAuthenticator.name, providerAuthenticator.passportStrategy()
+          @authenticators[providerAuthenticator.name] = providerAuthenticator
 
   newOAuth: (request,response, next)=>
     provider = request.params?.provider
@@ -61,33 +65,10 @@ class SessionsController extends ApplicationController
       name
     response.render 'login', {layout: false, providers}
 
-  # create: (request, response) ->
-  #   redirect_url = request.session?.post_auth_url ? '/'
-  #   user_id = request.body.user_id
-  #   request.session = user_id: user_id
-
-  #   loadCreatedBoards = (done) ->
-  #     Board.createdBy user_id, (err, createdBoards) ->
-  #       throw err if err
-  #       done(null, createdBoards || [])
-
-  #   loadCollaboratedBoards = (done) ->
-  #     Board.collaboratedBy user_id, (err, collaboratedBoards) ->
-  #       throw err if err
-  #       done(null, collaboratedBoards || [])
-
-  #   onLoadComplete = (err, boards) ->
-  #     if (boards.created.length + boards.collaborated.length > 0) or redirect_url != '/'
-  #       response.redirect redirect_url
-  #     else
-  #       boardsController = new BoardsController
-  #       boardsController.build "#{user_id}'s board", user_id, (board) ->
-  #         response.redirect "/boards/#{board.id}"
-
-  #   async.parallel
-  #     "created" : loadCreatedBoards
-  #     "collaborated" : loadCollaboratedBoards
-  #   , onLoadComplete
+  create: (request, response, next) =>
+    failureRedirect = '/failed'
+    successRedirect = '/success'
+    passport.authenticate('local', { successRedirect, failureRedirect })(request, response, next)
 
   destroy: (request, response) ->
     request.session = {}

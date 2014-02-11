@@ -4,6 +4,7 @@ Provider = require '../provider'
 
 class Facebook extends Provider
   name: 'facebook'
+  oauth: true
 
   passportStrategyClass: FacebookStrategy
 

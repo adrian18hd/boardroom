@@ -13,6 +13,7 @@ addRouting = (env, app, loginProtection, createSocketNamespace) ->
 
   sessionsController = new SessionsController
   app.get '/login', sessionsController.new
+  app.post '/login', sessionsController.create
   app.get '/logout', sessionsController.destroy
 
   app.get '/oauth/:provider', sessionsController.newOAuth

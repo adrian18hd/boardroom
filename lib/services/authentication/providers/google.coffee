@@ -5,6 +5,7 @@ Provider = require '../provider'
 
 class Google extends Provider
   name: 'google'
+  oauth: true
 
   passportStrategyClass: GoogleStrategy
 
@@ -23,7 +24,7 @@ class Google extends Provider
 
   identityFromOAuth: (accessToken, refreshToken, profile) ->
     profile.email = profile._json?.email
-    profile.username = profile.email?.replace(/@.*$/,"");
+    profile.username = profile.email?.replace(/@.*$/,"")
     # +++ todo find a way to get user's avatar from gmail or google plus or google api or whatever
     md5 = crypto.createHash 'md5'
     md5.update profile.email

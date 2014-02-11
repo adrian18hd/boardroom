@@ -4,6 +4,7 @@ Provider = require '../provider'
 
 class Twitter extends Provider
   name: 'twitter'
+  oauth: true
 
   passportStrategyClass: TwitterStrategy
 

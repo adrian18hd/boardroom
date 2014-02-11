@@ -25,6 +25,7 @@
     "passport-twitter": "0.1.5",
     "passport-facebook": "0.1.x",
     "passport-google-oauth": "0.1.x",
+    "passport-local": "0.1.x",
     "less": "1",
     "coffee-script": ">=1.7.1",
     "mongoose": "3",
