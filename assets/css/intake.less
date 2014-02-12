@@ -1,0 +1,56 @@
+.intake-page {
+  .box-shadow(~"0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.8) inset");
+  margin: 0;
+  position: relative;
+  color: @grayNevada;
+
+  .navbar {
+    height: 44px;
+
+    .title {
+      display: none;
+    }
+    .navbar-inner {
+      border-bottom: 6px solid @grayDark;
+    }
+  }
+
+  .container {
+    padding: 140px;
+    width: 60%;
+
+    h1 {
+      text-align: center;
+
+      span {
+        display: block;
+        font-size: 16px;
+      }
+    }
+
+    hr {
+      float: right;
+      display: block;
+      margin: 50px auto;
+      height: 1px;
+      width: 100%;
+      background-color: @grayDark;
+      .box-shadow(0 1px -1px @white);
+      .opacity(60);
+    }
+  }
+
+  #carbonfive-logo {
+    background: transparent url('/images/c5-social-logo.png') no-repeat 0 0;
+    display: inline-block;
+    float: right;
+    line-height: 30px;
+    padding-left: 30px;
+    margin-top: 75px;
+    text-decoration: none;
+    &:hover {
+      color: @grayDark;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+    }
+  }
+}
