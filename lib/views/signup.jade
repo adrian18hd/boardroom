@@ -1,0 +1,37 @@
+!!! 5
+html
+  head
+    != css('application')
+    != js('login')
+    meta(name="viewport", content="width=device-width initial-scale=1.0")
+    link(href='http://fonts.googleapis.com/css?family=Lato:400,700|Inconsolata:400,700', rel='stylesheet', type='text/css')
+    title Boardroom - Real-time Reflection and Story Boarding
+
+  body#signup-page
+    .container
+      h1
+        span
+          | Welcome to
+        | Boardroom
+
+      #social-login(action='/login', method='post')
+        h2 Sign Up
+        form(action='/signup', method='POST')
+          label
+            | Email
+          input(type='text' name='username')
+          label
+            | Password
+          input(type='password' name='password')
+          input(type='submit')
+        hr
+        blockquote
+          em
+            | &ldquo;
+          | Better than stickies on a wall.
+          em
+            | &rdquo;
+      a#carbonfive-logo(href="http://www.carbonfive.com", target="_blank")
+        | POWERED BY CARBON FIVE
+
+  include ./includes/ga.jade

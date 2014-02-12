@@ -8,6 +8,9 @@ class IdentitiesController extends ApplicationController
   constructor: ()->
     passport.use localSignup.name, localSignup.passportStrategy()
 
+  new: (request, response, next) =>
+    response.render 'signup', {layout: false}
+
   create: (request, response, next) =>
     failureRedirect = '/failed'
     successRedirect = '/created'

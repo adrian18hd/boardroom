@@ -14,7 +14,7 @@ passport.deserializeUser (_id, done)-> User.findOne { _id }, done
 class SessionsController extends ApplicationController
 
   constructor: ()->
-    @authenticators = {}
+    @oauthenticators = {}
     @registerAuthenticators()
 
   registerAuthenticators: ()=>
@@ -26,7 +26,7 @@ class SessionsController extends ApplicationController
           if providerAuthenticator.isConfigured()
             try
               passport.use providerAuthenticator.passportStrategy()
-              @authenticators[providerAuthenticator.name] = providerAuthenticator
+              @oauthenticators[providerAuthenticator.name] = providerAuthenticator
               logger.debug -> "auth: registered #{providerAuthenticator.name} provider"
             catch e
               logger.warn -> "auth: error regsitering #{providerAuthenticator.name} provider - #{e.message}"
@@ -34,11 +34,10 @@ class SessionsController extends ApplicationController
             logger.warn -> "auth: unable to register #{providerAuthenticator.name} provider - not configured"
         else
           passport.use providerAuthenticator.name, providerAuthenticator.passportStrategy()
-          @authenticators[providerAuthenticator.name] = providerAuthenticator
 
   newOAuth: (request,response, next)=>
     provider = request.params?.provider
-    authenticator = @authenticators[provider]
+    authenticator = @oauthenticators[provider]
     unless authenticator?
       logger.error -> "no registered provider for #{provider}"
       response.redirect '/login'
@@ -61,7 +60,7 @@ class SessionsController extends ApplicationController
     passport.authenticate(provider, { successRedirect, failureRedirect })(request,response, next)
 
   new: (request, response) =>
-    providers = for name, provider of @authenticators
+    providers = for name, provider of @oauthenticators
       name
     response.render 'login', {layout: false, providers}
 

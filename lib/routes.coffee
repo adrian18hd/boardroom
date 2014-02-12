@@ -13,6 +13,7 @@ addRouting = (env, app, loginProtection, createSocketNamespace) ->
   app.get '/styles', loginProtection, contentsController.styles
 
   identitiesController = new IdentitiesController
+  app.get '/signup', identitiesController.new
   app.post '/signup', identitiesController.create
 
   sessionsController = new SessionsController
