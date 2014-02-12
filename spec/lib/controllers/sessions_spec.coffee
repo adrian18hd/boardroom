@@ -27,7 +27,7 @@ describeController 'SessionsController', (session) ->
               response = res
               done()
 
-      it 'logs the user into the boards page', ->
+      it 'logs the user into the success page', ->
         expect(response).toBeDefined()
         expect(response.redirect).toBeTruthy()
         redirect = url.parse response.headers.location

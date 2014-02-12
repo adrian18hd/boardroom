@@ -3,9 +3,9 @@ LocalStrategy = require('passport-local').Strategy
 Provider = require '../provider'
 Identity = require '../../../models/identity'
 
-class Local extends Provider
+class LocalLogin extends Provider
   oauth: false
-  name: 'local'
+  name: 'local-login'
 
   passportStrategyClass: LocalStrategy
 
@@ -28,4 +28,4 @@ class Local extends Provider
 
         return done(null, identity)
 
-module.exports = new Local
+module.exports = new LocalLogin

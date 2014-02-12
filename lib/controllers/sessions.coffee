@@ -68,7 +68,7 @@ class SessionsController extends ApplicationController
   create: (request, response, next) =>
     failureRedirect = '/failed'
     successRedirect = '/success'
-    passport.authenticate('local', { successRedirect, failureRedirect })(request, response, next)
+    passport.authenticate('local-login', { successRedirect, failureRedirect })(request, response, next)
 
   destroy: (request, response) ->
     request.session = {}
