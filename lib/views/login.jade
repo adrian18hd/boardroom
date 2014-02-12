@@ -23,6 +23,14 @@ html
           button(onclick="javascript:window.location = href='oauth/#{provider}'")
             i(class="icon-#{icon}")
             span #{provider}
+      #local-login
+        h2 or sign in with boardroom local account
+        form(action='/login', method='POST')
+          label email
+          input(type='text' name='username')
+          label password
+          input(type='password' name='password')
+          input(type='submit')
         hr
         blockquote
           em

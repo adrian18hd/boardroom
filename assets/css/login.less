@@ -40,7 +40,8 @@ body#login-page {
     }
 
 
-    #social-login {
+    #social-login,
+    #local-login {
       .landing-page-form;
       text-align: center;
       margin-top: 100px;
@@ -51,7 +52,7 @@ body#login-page {
         color: #7a7f80;
         font-size: 14px;
         text-decoration: none;
-        line-height: 22px;            
+        line-height: 22px;
         i {
           font-size: 20px;
           padding-right: 6px;
@@ -78,6 +79,28 @@ body#login-page {
         text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
       }
     }
+    #local-login {
+      margin-top: 25px;
+
+      label,
+      input[type='text'],
+      input[type='password'] {
+        display: inline-block;
+        float: none;
+        margin-right: 20px;
+      }
+
+      input[type='text'],
+      input[type='password'] {
+        height: 1.2em;
+      }
+
+      input[type='submit'] {
+        display: block;
+        margin: 0 auto;
+        width: 75px;
+      }
+    }
   }
 }
 
@@ -92,7 +115,8 @@ body#login-page {
       background-image: none;
     }
 
-    input[type="text"] {
+    input[type="text"],
+    input[type="password"] {
       width: 200px;
       margin-bottom: 18px;
       font-size: 12px;
