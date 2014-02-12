@@ -1,6 +1,7 @@
 Sockets = require './services/sockets'
 HomeController = require './controllers/home'
 ContentsController = require './controllers/contents'
+IdentitiesController = require './controllers/identities'
 SessionsController = require './controllers/sessions'
 BoardsController = require './controllers/boards'
 
@@ -10,6 +11,9 @@ addRouting = (env, app, loginProtection, createSocketNamespace) ->
 
   contentsController = new ContentsController
   app.get '/styles', loginProtection, contentsController.styles
+
+  identitiesController = new IdentitiesController
+  app.post '/signup', identitiesController.create
 
   sessionsController = new SessionsController
   app.get '/login', sessionsController.new
