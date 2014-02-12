@@ -18,17 +18,30 @@ describeController 'SessionsController', (session) ->
           identity.password = identity.generateHash(password)
           identity.save (err)->
             throw err if err
-
-        Factory.create 'user', (error, user) ->
-          session.request()
-            .post('/login')
-            .send({ username: username, password: password })
-            .end (req, res)->
-              response = res
-              done()
+            session.request()
+              .post('/login')
+              .send({ username: username, password: password })
+              .end (req, res)->
+                response = res
+                done()
 
       it 'logs the user into the success page', ->
         expect(response).toBeDefined()
         expect(response.redirect).toBeTruthy()
         redirect = url.parse response.headers.location
-        expect(redirect.path).toEqual '/success'
+        expect(redirect.path).toEqual '/'
+
+    describe 'the users logs in with incorrect credentials', ->
+      beforeEach (done) ->
+        session.request()
+          .post('/login')
+          .send({ username: 'not-real', password: 'incorrect' })
+          .end (req, res)->
+            response = res
+            done()
+
+      it 'keeps them on the login page', ->
+        expect(response).toBeDefined()
+        expect(response.redirect).toBeTruthy()
+        redirect = url.parse response.headers.location
+        expect(redirect.path).toEqual '/login'

@@ -2,6 +2,7 @@ LocalStrategy = require('passport-local').Strategy
 
 Provider = require '../provider'
 Identity = require '../../../models/identity'
+User = require '../../../models/user'
 
 class LocalLogin extends Provider
   oauth: false
@@ -26,6 +27,6 @@ class LocalLogin extends Provider
         if (!identity.validPassword(password))
           return done(null, false)
 
-        return done(null, identity)
+        User.logIn identity, done
 
 module.exports = new LocalLogin
