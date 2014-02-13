@@ -18,6 +18,9 @@ html
         h2 Sign Up
         form(action='/signup', method='POST')
           label
+            | Name (optional)
+          input(type='text' name='displayName')
+          label
             | Email
           input(type='text' name='email')
           label

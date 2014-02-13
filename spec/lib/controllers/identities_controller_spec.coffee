@@ -18,7 +18,6 @@ describeController 'IdentitiesController', (session) ->
             response = res
             done()
 
-
       it 'creates a new Identity', (done) ->
         Identity.count {email: email}, (err, count) ->
           expect(count).toEqual 1

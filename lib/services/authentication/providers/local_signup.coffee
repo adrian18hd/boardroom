@@ -25,6 +25,7 @@ class LocalSignup extends Provider
           newIdentity = new Identity()
           newIdentity.email = email
           newIdentity.password = newIdentity.generateHash(password)
+          newIdentity.displayName = request.body.displayName ? email
 
           newIdentity.save (err) ->
             throw err if err
