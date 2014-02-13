@@ -11,7 +11,7 @@ describe 'User', ->
 
       beforeEach (done) ->
         Factory.build 'identity',
-          { source: 'local-login', username: username },
+          { source: 'local-login', email: username },
           (error, o) ->
             passedIdentity = o
             done()
@@ -22,14 +22,14 @@ describe 'User', ->
 
         beforeEach (done) ->
           Factory.build 'identity',
-            { source: 'boardroom-legacy', username: username }
+            { source: 'boardroom-legacy', email: username }
             (err, existingIdentity) ->
               Factory "user",
                 { identities: [existingIdentity] }
                 (err, o) ->
                   legacyUser = o
                   Factory.build 'identity',
-                    { source: 'local-login', username: username },
+                    { source: 'local-login', email: username },
                     (error, o) ->
                       passedIdentity = o
                       User.logIn passedIdentity, false, (err, o) ->

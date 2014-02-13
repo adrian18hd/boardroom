@@ -6,21 +6,21 @@ IdentitiesController = require '../../../lib/controllers/identities'
 describeController 'IdentitiesController', (session) ->
   describe '#create', ->
     response = undefined
-    username = 'my-great-username'
+    email = 'my-great-username@gmail.com'
     password = 'my-secure-password'
 
     describe 'when the identity is new', ->
       beforeEach (done) ->
         session.request()
           .post('/signup')
-          .send({ username: username, password: password })
+          .send({ email: email, password: password })
           .end (req, res)->
             response = res
             done()
 
 
       it 'creates a new Identity', (done) ->
-        Identity.count {username: username}, (err, count) ->
+        Identity.count {email: email}, (err, count) ->
           expect(count).toEqual 1
           done()
 
@@ -31,19 +31,19 @@ describeController 'IdentitiesController', (session) ->
 
     describe 'when the identity already exists', ->
       beforeEach (done) ->
-        Identity.create {username: username}, (err, identity) ->
+        Identity.create {email: email}, (err, identity) ->
           identity.password = identity.generateHash(password)
           identity.save (err) ->
             throw err if err
 
         session.request()
           .post('/signup')
-          .send({ username: username, password: password })
+          .send({ email: email, password: password })
           .end (req, res)->
             response = res
             done()
 
       it 'does not create a new Identity', (done) ->
-        Identity.count {username: username}, (err, count) ->
+        Identity.count {email: email}, (err, count) ->
           expect(count).toEqual 1
           done()

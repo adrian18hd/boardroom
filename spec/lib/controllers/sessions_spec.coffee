@@ -11,16 +11,16 @@ describeController 'SessionsController', (session) ->
 
     describe 'the users logs in with local credentials', ->
       beforeEach (done) ->
-        username = 'my-special-name'
+        email = 'my-special-name@gmail.com'
         password = 'safe-password'
 
-        Factory.create 'identity', {username: username }, (error, identity) ->
+        Factory.create 'identity', {email: email }, (error, identity) ->
           identity.password = identity.generateHash(password)
           identity.save (err)->
             throw err if err
             session.request()
               .post('/login')
-              .send({ username: username, password: password })
+              .send({ email: email, password: password })
               .end (req, res)->
                 response = res
                 done()
@@ -35,7 +35,7 @@ describeController 'SessionsController', (session) ->
       beforeEach (done) ->
         session.request()
           .post('/login')
-          .send({ username: 'not-real', password: 'incorrect' })
+          .send({ email: 'not-real', password: 'incorrect' })
           .end (req, res)->
             response = res
             done()

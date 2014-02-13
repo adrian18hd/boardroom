@@ -13,7 +13,7 @@ userSchema.statics =
     if oauth
       user_conditions = { 'identities.source': identity.source, 'identities.sourceId': identity.sourceId }
     else
-      user_conditions = { 'identities.username': identity.username }
+      user_conditions = { 'identities.email': identity.email }
 
     @migrateLegacyUser identity, (err, gotCaptured) =>
       @findOne user_conditions, (err, user) ->

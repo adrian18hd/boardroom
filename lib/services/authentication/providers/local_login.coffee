@@ -13,11 +13,11 @@ class LocalLogin extends Provider
   isConfigured: => true
 
   passportStrategy: =>
-    new @passportStrategyClass { usernameField: 'username', passReqToCallback: true }, @passportCallback
+    new @passportStrategyClass { usernameField: 'email', passReqToCallback: true }, @passportCallback
 
-  passportCallback: (request, username, password, done) =>
+  passportCallback: (request, email, password, done) =>
     process.nextTick ->
-      Identity.findOne { 'username' :  username }, (err, identity) ->
+      Identity.findOne { 'email' :  email }, (err, identity) ->
         if (err)
           return done(err)
 
