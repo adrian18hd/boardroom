@@ -5,6 +5,56 @@ describe 'User', ->
     expect(User).toBeDefined()
 
   describe "logging in", ->
+    describe 'given a local auth identity', ->
+      username = 'my-username@gmail.com'
+      passedIdentity  = undefined
+
+      beforeEach (done) ->
+        Factory.build 'identity',
+          { source: 'local-login', username: username },
+          (error, o) ->
+            passedIdentity = o
+            done()
+
+      describe 'for a legacy user who had a previous (non-oauth) account', ->
+        legacyUser = undefined
+        loggedInUser = undefined
+
+        beforeEach (done) ->
+          Factory.build 'identity',
+            { source: 'boardroom-legacy', username: username }
+            (err, existingIdentity) ->
+              Factory "user",
+                { identities: [existingIdentity] }
+                (err, o) ->
+                  legacyUser = o
+                  Factory.build 'identity',
+                    { source: 'local-login', username: username },
+                    (error, o) ->
+                      passedIdentity = o
+                      User.logIn passedIdentity, false, (err, o) ->
+                        loggedInUser = o
+                        done()
+
+        it 'captures the old account', ->
+          expect(legacyUser.id).toEqual(loggedInUser.id)
+
+      describe 'for an existing user with a matching local identity', ->
+        existingUser = undefined
+        loggedInUser = undefined
+
+        beforeEach (done) ->
+          Factory "user",
+            { identities: [passedIdentity] }
+            (err, o) ->
+              existingUser = o
+              User.logIn passedIdentity, false, (err, o) ->
+                loggedInUser = o
+                done()
+
+        it 'passes the user to the callback', ->
+          expect(existingUser.id).toEqual(loggedInUser.id)
+
     describe 'given an authenticated identity', ->
       source          = undefined
       sourceId        = undefined
@@ -48,7 +98,7 @@ describe 'User', ->
                       { source, sourceId, username },
                       (error, o) ->
                         passedIdentity = o
-                        User.logIn passedIdentity, (err, o) ->
+                        User.logIn passedIdentity, true, (err, o) ->
                           loggedInUser = o
                           done()
 
@@ -73,7 +123,7 @@ describe 'User', ->
                       { source, sourceId, username, email, displayName },
                       (error, o) ->
                         passedIdentity = o
-                        User.logIn passedIdentity, (err, o) ->
+                        User.logIn passedIdentity, true, (err, o) ->
                           loggedInUser = o
                           done()
 
@@ -93,7 +143,7 @@ describe 'User', ->
                 (err, o) ->
                   existingUser = o
 
-                  User.logIn passedIdentity, (err, o) ->
+                  User.logIn passedIdentity, true, (err, o) ->
                     loggedInUser = o
                     done()
 
@@ -107,7 +157,7 @@ describe 'User', ->
         newUser = undefined
 
         beforeEach (done) ->
-          User.logIn passedIdentity, (err, o) ->
+          User.logIn passedIdentity, true, (err, o) ->
             newUser = o
             done()
 

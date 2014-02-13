@@ -9,9 +9,14 @@ userSchema = new mongoose.Schema
   loginStats: String
 
 userSchema.statics =
-  logIn: (identity, callback) ->
+  logIn: (identity, oauth, callback) ->
+    if oauth
+      user_conditions = { 'identities.source': identity.source, 'identities.sourceId': identity.sourceId }
+    else
+      user_conditions = { 'identities.username': identity.username }
+
     @migrateLegacyUser identity, (err, gotCaptured) =>
-      @findOne { 'identities.source': identity.source, 'identities.sourceId': identity.sourceId }, (err, user) ->
+      @findOne user_conditions, (err, user) ->
         user ?= new User
         user.updateIdentity(identity, callback)
 

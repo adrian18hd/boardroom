@@ -15,7 +15,7 @@ class Provider
     identity.sourceId ?= identity.id
     delete identity.id
 
-    User.logIn identity, oauthDoneCallback
+    User.logIn identity, true, oauthDoneCallback
 
   isConfigured: ()=> # return false if any secret key is missing
     keysConfigured = (val? for key, val of @secret)

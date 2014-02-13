@@ -27,6 +27,6 @@ class LocalLogin extends Provider
         if (!identity.validPassword(password))
           return done(null, false)
 
-        User.logIn identity, done
+        User.logIn identity, false, done
 
 module.exports = new LocalLogin
