@@ -1,5 +1,6 @@
 LocalStrategy = require('passport-local').Strategy
 
+crypto = require 'crypto'
 Provider = require '../provider'
 Identity = require '../../../models/identity'
 
@@ -26,6 +27,10 @@ class LocalSignup extends Provider
           newIdentity.email = email
           newIdentity.password = newIdentity.generateHash(password)
           newIdentity.displayName = request.body.displayName ? email
+
+          md5 = crypto.createHash 'md5'
+          md5.update email
+          newIdentity.avatar = "http://www.gravatar.com/avatar/#{md5.digest 'hex'}?d=retro"
 
           newIdentity.save (err) ->
             throw err if err
