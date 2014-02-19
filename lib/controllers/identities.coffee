@@ -12,8 +12,8 @@ class IdentitiesController extends ApplicationController
     response.render 'signup', {layout: false}
 
   create: (request, response, next) =>
-    failureRedirect = '/failed'
-    successRedirect = '/created'
+    failureRedirect = '/signup'
+    successRedirect = '/'
     passport.authenticate('local-signup', { successRedirect, failureRedirect })(request, response, next)
 
 module.exports = IdentitiesController

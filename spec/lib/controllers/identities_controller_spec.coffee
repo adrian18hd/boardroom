@@ -23,10 +23,10 @@ describeController 'IdentitiesController', (session) ->
           expect(count).toEqual 1
           done()
 
-      it 'redirects to created', ->
+      it 'redirects to boards list page', ->
         expect(response.redirect).toBeTruthy()
         redirect = url.parse response.headers.location
-        expect(redirect.path).toEqual '/created'
+        expect(redirect.path).toEqual '/'
 
     describe 'when the identity already exists', ->
       beforeEach (done) ->
