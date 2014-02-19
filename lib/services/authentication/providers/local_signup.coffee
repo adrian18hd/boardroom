@@ -1,5 +1,6 @@
 LocalStrategy = require('passport-local').Strategy
 
+mailer = require '../../mailer'
 crypto = require 'crypto'
 Provider = require '../provider'
 Identity = require '../../../models/identity'
@@ -34,6 +35,12 @@ class LocalSignup extends Provider
 
           newIdentity.save (err) ->
             throw err if err
+            emailOptions = {
+              to: email,
+              subject: 'Confirm your account',
+              body: 'Click this link!'
+            }
+            mailer.send(emailOptions)
             return done(null, newIdentity)
 
 module.exports = new LocalSignup

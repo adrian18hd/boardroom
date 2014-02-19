@@ -1,6 +1,7 @@
 { Identity, Factory, url, async, describeController, superagent } =
   require '../support/controller_test_support'
 
+mailer = require '../../../lib/services/mailer'
 IdentitiesController = require '../../../lib/controllers/identities'
 
 describeController 'IdentitiesController', (session) ->
@@ -10,7 +11,15 @@ describeController 'IdentitiesController', (session) ->
     password = 'my-secure-password'
 
     describe 'when the identity is new', ->
+      emailParams = {
+        to: email,
+        subject: 'Confirm your account',
+        body: 'Click this link!'
+      }
+
       beforeEach (done) ->
+        spyOn(mailer, 'send')
+
         session.request()
           .post('/signup')
           .send({ email: email, password: password })
@@ -27,6 +36,9 @@ describeController 'IdentitiesController', (session) ->
         expect(response.redirect).toBeTruthy()
         redirect = url.parse response.headers.location
         expect(redirect.path).toEqual '/'
+
+      it 'sends an email', ->
+        expect(mailer.send).toHaveBeenCalledWith(emailParams)
 
     describe 'when the identity already exists', ->
       beforeEach (done) ->
