@@ -35,7 +35,8 @@
     "underscore": "latest",
     "look": "latest",
     "execSync": "latest",
-    "password-hash": "latest"
+    "password-hash": "latest",
+    "nodemailer": "latest"
   },
   "devDependencies": {
     "async": "0.2.6",
