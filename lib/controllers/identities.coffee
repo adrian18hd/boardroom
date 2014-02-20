@@ -9,7 +9,8 @@ class IdentitiesController extends ApplicationController
     passport.use localSignup.name, localSignup.passportStrategy()
 
   new: (request, response, next) =>
-    response.render 'signup', {layout: false}
+    errors = request.flash('signupError')
+    response.render 'signup', {flash: errors, layout: false}
 
   create: (request, response, next) =>
     failureRedirect = '/signup'

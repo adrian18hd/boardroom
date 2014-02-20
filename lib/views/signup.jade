@@ -16,16 +16,19 @@ html
 
       #local-signup
         h2 Sign Up
+        - if(typeof flash != 'undefined')
+          span.error= flash
+
         form(action='/signup', method='POST')
           label
             | Name (optional)
           input(type='text' name='displayName')
           label
             | Email
-          input(type='text' name='email')
+          input(type='text' name='email', required='required')
           label
             | Password
-          input(type='password' name='password')
+          input(type='password' name='password', required='required')
           input(type='submit')
         hr
         blockquote

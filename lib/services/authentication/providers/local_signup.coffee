@@ -20,9 +20,9 @@ class LocalSignup extends Provider
     process.nextTick ->
       Identity.findOne { 'email': email }, (err, identity) ->
         if err
-          return done(err)
+          return done(err, request.flash('signupError', 'There was an error.'))
         else if identity
-          return done(null, false)
+          return done(null, false, request.flash('signupError', 'There is already an account for this email address.'))
         else
           newIdentity = new Identity()
           newIdentity.email = email
