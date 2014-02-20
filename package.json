@@ -36,7 +36,8 @@
     "look": "latest",
     "execSync": "latest",
     "password-hash": "latest",
-    "nodemailer": "latest"
+    "nodemailer": "latest",
+    "connect-flash": "latest"
   },
   "devDependencies": {
     "async": "0.2.6",

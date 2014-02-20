@@ -4,6 +4,7 @@ cookies = require 'cookie-sessions'
 logger = require './services/logger'
 pipeline = require './services/asset_pipeline'
 passport = require 'passport'
+flash = require 'connect-flash'
 
 configure = (app) ->
   app.use redirectHandler
@@ -17,6 +18,7 @@ configure = (app) ->
   app.use catchPathErrors
   app.use passport.initialize()
   app.use passport.session()
+  app.use flash()
 
 catchPathErrors = (error, request, response, next) ->
   logger.error -> error.message
