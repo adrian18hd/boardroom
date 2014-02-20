@@ -9,29 +9,49 @@ describeController 'SessionsController', (session) ->
   describe '#createLocal', ->
     response = undefined
 
-    describe 'the users logs in with local credentials', ->
-      beforeEach (done) ->
-        email = 'my-special-name@gmail.com'
-        password = 'safe-password'
+    describe 'the users has a local account', ->
+      email = 'my-special-name@gmail.com'
+      password = 'safe-password'
 
-        Factory.create 'identity', {email: email }, (error, identity) ->
-          identity.password = identity.generateHash(password)
-          identity.save (err)->
-            throw err if err
-            session.request()
-              .post('/login')
-              .send({ email: email, password: password })
-              .end (req, res)->
-                response = res
-                done()
+      describe 'the account is confirmed', ->
+        beforeEach (done) ->
+          Factory.create 'identity', {email: email}, (error, identity) ->
+            identity.password = identity.generateHash(password)
+            identity.save (err)->
+              throw err if err
+              session.request()
+                .post('/login')
+                .send({ email: email, password: password })
+                .end (req, res)->
+                  response = res
+                  done()
 
-      it 'logs the user into the success page', ->
-        expect(response).toBeDefined()
-        expect(response.redirect).toBeTruthy()
-        redirect = url.parse response.headers.location
-        expect(redirect.path).toEqual '/'
+        it 'logs the user into the boards page', ->
+          expect(response).toBeDefined()
+          expect(response.redirect).toBeTruthy()
+          redirect = url.parse response.headers.location
+          expect(redirect.path).toEqual '/'
 
-    describe 'the users logs in with incorrect credentials', ->
+      describe 'the account is not confirmed', ->
+        beforeEach (done) ->
+          Factory.create 'identity', {email: email, confirmationCode: '12345'}, (error, identity) ->
+            identity.password = identity.generateHash(password)
+            identity.save (err)->
+              throw err if err
+              session.request()
+                .post('/login')
+                .send({ email: email, password: password })
+                .end (req, res)->
+                  response = res
+                  done()
+
+        it 'returns the user to the login page', ->
+          expect(response).toBeDefined()
+          expect(response.redirect).toBeTruthy()
+          redirect = url.parse response.headers.location
+          expect(redirect.path).toEqual '/login'
+
+    describe 'the users does not have a local account', ->
       beforeEach (done) ->
         session.request()
           .post('/login')

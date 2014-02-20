@@ -16,4 +16,15 @@ class IdentitiesController extends ApplicationController
     successRedirect = '/'
     passport.authenticate('local-signup', { successRedirect, failureRedirect })(request, response, next)
 
+  confirm: (request, response, next) =>
+    Identity.findOne { 'confirmationCode': request.params.confirmationCode }, (err, identity) =>
+      if identity
+        identity.confirmationCode = null
+        identity.save (err) ->
+          throw err if err
+          response.redirect '/login'
+      else
+        response.redirect '/login'
+
+
 module.exports = IdentitiesController

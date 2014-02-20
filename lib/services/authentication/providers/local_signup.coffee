@@ -33,13 +33,21 @@ class LocalSignup extends Provider
           md5.update email
           newIdentity.avatar = "http://www.gravatar.com/avatar/#{md5.digest 'hex'}?d=retro"
 
+          confirmationCode = crypto.createHash 'md5'
+          confirmationCode.update newIdentity.displayName
+          newIdentity.confirmationCode = confirmationCode.digest('hex')
+
           newIdentity.save (err) ->
             throw err if err
+
+            confirmationLink = "http://#{request.get('host')}/identities/confirm/#{newIdentity.confirmationCode}"
+
             emailOptions = {
               to: email,
-              subject: 'Confirm your account',
-              body: 'Click this link!'
+              subject: 'Confirm your Boardroom account',
+              body: "Click this link to confirm your Boardroom account: #{confirmationLink}"
             }
+
             mailer.send(emailOptions)
             return done(null, newIdentity)
 

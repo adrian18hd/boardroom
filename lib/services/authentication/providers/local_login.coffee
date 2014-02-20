@@ -24,6 +24,9 @@ class LocalLogin extends Provider
         if (!identity)
           return done(null, false)
 
+        if (identity.confirmationCode)
+          return done(null, false)
+
         if (!identity.validPassword(password))
           return done(null, false)
 

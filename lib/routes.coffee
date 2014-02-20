@@ -15,6 +15,7 @@ addRouting = (env, app, loginProtection, createSocketNamespace) ->
   identitiesController = new IdentitiesController
   app.get '/signup', identitiesController.new
   app.post '/signup', identitiesController.create
+  app.get '/identities/confirm/:confirmationCode', identitiesController.confirm
 
   sessionsController = new SessionsController
   app.get '/login', sessionsController.new
