@@ -9,6 +9,7 @@ identitySchema = new mongoose.Schema
   avatar: String
   email: String
   password: String
+  confirmationCode: String
 
 identitySchema.methods.generateHash = (password) ->
   return passwordHash.generate(password)
