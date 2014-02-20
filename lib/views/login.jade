@@ -25,11 +25,13 @@ html
             span #{provider}
       #local-login
         h2 or sign in with boardroom local account
+        - if(typeof flash != 'undefined')
+          span.error= flash
         form(action='/login', method='POST')
           label email
-          input(type='text' name='email')
+          input(type='text' name='email', required='required')
           label password
-          input(type='password' name='password')
+          input(type='password' name='password', required='required')
           input(type='submit')
         h2 need an account?
         a(href='/signup') sign up

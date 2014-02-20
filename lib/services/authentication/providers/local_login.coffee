@@ -22,13 +22,13 @@ class LocalLogin extends Provider
           return done(err)
 
         if (!identity)
-          return done(null, false)
+          return done(null, false, request.flash('loginError', 'There is no account associated with this email address.'))
 
         if (identity.confirmationCode)
-          return done(null, false)
+          return done(null, false, request.flash('loginError', 'This account needs to be confirmed via email.'))
 
         if (!identity.validPassword(password))
-          return done(null, false)
+          return done(null, false, request.flash('loginError', 'Password is incorrect.'))
 
         User.logIn identity, false, done
 

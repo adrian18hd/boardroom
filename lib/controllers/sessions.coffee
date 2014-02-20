@@ -62,7 +62,9 @@ class SessionsController extends ApplicationController
   new: (request, response) =>
     providers = for name, provider of @oauthenticators
       name
-    response.render 'login', {layout: false, providers}
+
+    errors = request.flash('loginError')
+    response.render 'login', {flash: errors, layout: false, providers}
 
   create: (request, response, next) =>
     failureRedirect = '/login'
