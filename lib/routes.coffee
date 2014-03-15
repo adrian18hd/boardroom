@@ -19,8 +19,8 @@ addRouting = (env, app, loginProtection, createSocketNamespace) ->
   app.get '/oauth/:provider/callback', sessionsController.createOAuth
 
   boardsController = new BoardsController
+  app.get '/boards/:id.csv', loginProtection, createSocketNamespace, boardsController.downloadCSV
   app.get '/boards/:id', loginProtection, createSocketNamespace, boardsController.show
-  app.get '/boards/:id/csv', loginProtection, createSocketNamespace, boardsController.downloadCSV
   app.get '/boards/:id/warm', createSocketNamespace, boardsController.warm unless env == 'production'
   app.post '/boards/:id', loginProtection, boardsController.destroy
   app.post '/boards', loginProtection, boardsController.create
