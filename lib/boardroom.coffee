@@ -1,4 +1,5 @@
 express = require 'express'
+http = require 'http'
 
 Sockets = require './services/sockets'
 
@@ -17,7 +18,8 @@ class Boardroom
     addRouting @env, @app, loginProtection, createSocketNamespace
 
   start: ->
-    server = @app.listen @port
+    server = http.createServer @app
     Sockets.start server
+    server.listen @port
 
 module.exports = Boardroom
