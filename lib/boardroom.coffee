@@ -17,6 +17,10 @@ class Boardroom
     configure @app
     addRouting @env, @app, loginProtection, createSocketNamespace
 
+    if @opts.debug
+      { mongoose } = require './models/db'
+      mongoose.set 'debug', true
+
   start: ->
     server = http.createServer @app
     Sockets.start server

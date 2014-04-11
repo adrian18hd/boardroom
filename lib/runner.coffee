@@ -13,7 +13,7 @@ maxfiles = sh.exec('ulimit -n').stdout.trim()
 
 start = () ->
   Boardroom = require './boardroom'
-  new Boardroom({ env, port }).start()
+  new Boardroom({ env, port, debug }).start()
 
 if cluster.isMaster
   logger.warn -> 'Starting Boardroom'
