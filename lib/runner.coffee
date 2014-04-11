@@ -7,6 +7,7 @@ logger.setLevel( process.env.LOG_LEVEL ? 'info' )
 env = process.env.NODE_ENV ? 'development'
 port = process.env.PORT ? 7777
 cpus = process.env.CPUS ? 1
+debug = process.env.DEBUG ? false
 profile = process.env.PROFILE ? false
 maxfiles = sh.exec('ulimit -n').stdout.trim()
 
@@ -19,6 +20,7 @@ if cluster.isMaster
   logger.warn -> "  env:      #{env}"
   logger.warn -> "  port:     #{port}"
   logger.warn -> "  cpus:     #{cpus}"
+  logger.warn -> "  debug:    #{debug}"
   logger.warn -> "  profile:  #{profile}"
   logger.warn -> "  maxfiles: #{maxfiles}  (via ulimit -n)"
 
