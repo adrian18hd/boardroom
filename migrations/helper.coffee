@@ -43,6 +43,10 @@ DB.aggregate = (colName, query, callback) ->
   withCollection colName, (error, col) ->
     col.aggregate query, callback
 
+DB.ensureIndex = (colName, index, callback) ->
+  withCollection colName, (error, col) ->
+    col.ensureIndex index, callback
+
 withCollection = (colName, callback) ->
   mongo (error, db) ->
     db.collection colName, (error, col) ->
