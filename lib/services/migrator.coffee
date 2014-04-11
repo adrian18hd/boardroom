@@ -1,4 +1,5 @@
 fs = require 'fs'
+_s = require 'underscore.string'
 helper = require '../../migrations/helper'
 logger = require './logger'
 
@@ -14,9 +15,13 @@ class Migrator
         return callback()
 
       migration = @migrations.shift()
-      logger.info -> "migrate: #{migration.split('/').pop()}"
+      start = Date.now()
       m = require migration
-      m.up next
+      m.up () ->
+        finish = Date.now()
+        ms = _s.sprintf "%4d", (finish - start)
+        logger.info -> "migrate: #{ms}ms  #{migration.split('/').pop()}"
+        next()
 
     helper.connect (error) ->
       next error
