@@ -3,11 +3,12 @@ Board = require './board'
 Group = require './group'
 Card  = require './card'
 async = require 'async'
+_ = require 'underscore'
 class Populator
   constructor: () ->
 
   populate: (callback, cardinality="*") ->
-    return undefined unless callback? 
+    return undefined unless callback?
     (error, boardCursor) =>
       if 1 is cardinality
         @populateOne callback, boardCursor
@@ -17,56 +18,58 @@ class Populator
   populateMany: (callback, boards) ->
     return (callback null, []) unless boards? and 0 isnt boards?.length
     count = 0
-    for board in boards
-      do (board) =>
-        @fillBoard board, (error, board) ->
+    @findGroupsAndCards boards, (gmap, cmap) =>
+      for board in boards
+        @fillBoard board, gmap, cmap, (error, board) ->
           return callback error if error?
           count += 1
           callback null, boards if count == boards.length
 
   populateOne: (callback, board) ->
     return callback null, null unless board?
-    @fillBoard board, (error, board) ->
-      return callback error if error?
-      callback error, board
+    @findGroupsAndCards [board], (gmap, cmap) =>
+      @fillBoard board, gmap, cmap, (error, board) ->
+        return callback error if error?
+        callback null, board
 
-  fillBoard: (board, callback) ->
-    Group.find { boardId: board.id }, (error, groups) =>
+  findGroupsAndCards: (boards, callback) ->
+    boardIds = _(boards).pluck '_id'
+    Group.find { boardId: { $in: boardIds } }, (error, groups) =>
       return callback error if error?
-      board.groups = []
-      return callback error, board if groups.length == 0
-      count = 0
-      for group in groups
-        do (group) =>
-          @fillGroup group, (error, group) =>
-            return callback error if error?
-            board.groups.push group
-            count += 1
-            if count == groups.length
-              @fillUsers(board, callback)
+      groupIds = _(groups).pluck '_id'
+      gmap = _(groups).groupBy 'boardId'
+      Card.find { groupId: { $in: groupIds } }, (error, cards) =>
+        return callback error if error?
+        cmap = _(cards).groupBy 'groupId'
+        callback gmap, cmap
+
+  fillBoard: (board, gmap, cmap, callback) ->
+    groups = gmap[board._id]
+    board.groups = []
+    return callback null, board unless groups?
+    count = 0
+    for group in groups
+      @fillGroup group, cmap, (error, group) =>
+        return callback error if error?
+        board.groups.push group
+        count += 1
+        if count == groups.length
+          @fillUsers board, callback
 
   fillUsers: (board, callback) ->
-    userIdSet = {}
-    userIdSet[board.creator] = 1
-    for group in board.groups # collect unique userId's for all card authors
-      for card in group.cards
-        userIdSet[authorId] = 1 for authorId in [card.creator, card.authors..., card.plusAuthors...]
+    userIds = [board.creator]
+    ( userIds = userIds.concat [card.creator, card.authors..., card.plusAuthors...] ) for card in board.cards()
+    userIds = _(userIds).uniq()
 
-    for authorId, value of userIdSet # functor to lookup active Identity for each user
-      do (authorId)->
-        userIdSet[authorId] = (cb)->
-          userId = authorId
-          User.findById userId, (err, user)->
-            cb(null, user?.activeIdentity)
-
-    async.parallel userIdSet, (err, userIdentitySet) ->
-      board.userIdentitySet = userIdentitySet ? {}
+    User.find { _id: { $in: userIds } }, (error, users) =>
+      return callback error if error?
+      identSet = _.object( _(users).map (u) -> [u._id, u.activeIdentity] )
+      board.userIdentitySet = identSet ? {}
       callback null, board
 
-  fillGroup: (group, callback) ->
-    Card.find { groupId: group.id }, (error, cards) ->
-      return callback error if error?
-      group.cards = cards
-      callback null, group
+  fillGroup: (group, cmap, callback) ->
+    cards = cmap[group._id]
+    group.cards = cards
+    callback null, group
 
 module.exports = Populator
