@@ -58,8 +58,8 @@ class Populator
 
   fillUsers: (board, callback) ->
     userIds = [board.creator]
-    ( userIds = userIds.concat [card.creator, card.authors..., card.plusAuthors...] ) for card in board.cards()
-    userIds = _(userIds).uniq()
+    ( userIds = userIds.concat [card.creator, card.authors..., card.plusAuthors...] ) for card in board.cards() when card?
+    userIds = _.chain(userIds).uniq().compact().value()
 
     User.find { _id: { $in: userIds } }, (error, users) =>
       return callback error if error?
