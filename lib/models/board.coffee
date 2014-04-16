@@ -2,6 +2,7 @@
 Populator = require "./populator"
 Card = require "./card"
 Group = require "./group"
+_ = require 'underscore'
 
 BoardSchema = new mongoose.Schema
   name     : { type: String, required: true }
@@ -58,7 +59,7 @@ BoardSchema.methods =
   cards: ->
     cards = []
     cards = cards.concat(group.cards) for group in @groups
-    cards
+    _(cards).compact()
 
   collaborators: ->
     collabs = []
