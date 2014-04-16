@@ -125,7 +125,7 @@ class boardroom.views.Group extends boardroom.views.Base
       @$('.name').val(name).adjustWidth()
     if options?.rebroadcast
       userIdentity = @model.board().userIdentityForId group.get 'author'
-      @editLock.lock(1000, userIdentity.get('avatar'), "#{userIdentity.get('displayName')} is typing...") if userIdentity?
+      @editLock.lock(1000, userIdentity.avatar(), "#{userIdentity.displayName()} is typing...") if userIdentity?
 
   updateX: (group, x, options) =>
     @updatePosition x, group.get('y'), options
@@ -137,7 +137,7 @@ class boardroom.views.Group extends boardroom.views.Base
     @moveTo x: x, y: y
     if options?.rebroadcast
       userIdentity = @model.board().userIdentityForId @model.get 'author'
-      @dragLock.lock(1000, userIdentity.get('avatar'), userIdentity.get('displayName')) if userIdentity?
+      @dragLock.lock(1000, userIdentity.avatar(), userIdentity.displayName()) if userIdentity?
 
   updateZ: (group, z, options) =>
     @$el.css 'z-index', z

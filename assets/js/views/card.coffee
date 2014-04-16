@@ -118,7 +118,7 @@ class boardroom.views.Card extends boardroom.views.Base
     if options?.rebroadcast
       @triggerAutosize()
       userIdentity = @model.board().userIdentityForId card.get 'author'
-      @editLock.lock(1000, userIdentity.get('avatar'), "#{userIdentity.get('displayName')} is typing...") if userIdentity?
+      @editLock.lock(1000, userIdentity.avatar(), "#{userIdentity.displayName()} is typing...") if userIdentity?
 
   updateX: (card, x, options) =>
     @updatePosition x, card.get('y'), options
@@ -130,7 +130,7 @@ class boardroom.views.Card extends boardroom.views.Base
     @moveTo x: x, y: y
     if options?.rebroadcast
       userIdentity = @model.board().userIdentityForId @model.get 'author'
-      @dragLock.lock(1000, userIdentity.get('avatar'), userIdentity.get('displayName')) if userIdentity?
+      @dragLock.lock(1000, userIdentity.avatar(), userIdentity.displayName()) if userIdentity?
 
   updateOrder: (card, order, options) =>
     #text = card.get('text')
@@ -159,7 +159,7 @@ class boardroom.views.Card extends boardroom.views.Base
     for plusAuthor in plusAuthors
       userIdentity = @model.board().userIdentityForId(plusAuthor)
       imgHTML = """
-        <img class="avatar" src="#{userIdentity.get 'avatar'}" title="#{_.escape userIdentity.get 'displayName'}"/>
+        <img class="avatar" src="#{userIdentity.avatar()}" title="#{_.escape userIdentity.displayName()}"/>
       """
       $plusAuthors.append(imgHTML)
 
@@ -174,7 +174,7 @@ class boardroom.views.Card extends boardroom.views.Base
     for author in authors
       userIdentity = @model.board().userIdentityForId(author)
       imgHTML = """
-        <img class="avatar" src="#{userIdentity.get 'avatar'}" title="#{_.escape userIdentity.get 'displayName'}"/>
+        <img class="avatar" src="#{userIdentity.avatar()}" title="#{_.escape userIdentity.displayName()}"/>
       """
       $authors.append(imgHTML)
 
