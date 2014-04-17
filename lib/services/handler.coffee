@@ -28,6 +28,7 @@ class Handler
         @socket.broadcast.emit event, message
 
   handleUpdate: (event, data) =>
+    @socket.broadcast.emit event, data
     @modelClass.findById data._id, (err, model) =>
       throw err if err?
       if model
@@ -35,8 +36,6 @@ class Handler
           if err?
             logger.error => "Cannot update #{@name}:"
             logger.logValidationErrors err
-          else
-            @socket.broadcast.emit event, data
       else
         logger.error => "#{event}: missing #{@name}: #{data._id}"
 
