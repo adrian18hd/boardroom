@@ -9,6 +9,10 @@ class boardroom.Handler
   initialize: () ->
     @socket = @createSocket()
     @logger.socket = @socket
+
+    @sender = setInterval @sendAll, 50
+    @sendQueue = {}
+
     new boardroom.utils.Watcher(@user, @board, @socket).watch()
 
     @socket.on 'connect', @onConnect
@@ -64,15 +68,31 @@ class boardroom.Handler
   send: (name, message, options) =>
     return unless message?
     return if options?.rebroadcast
+    if name.match /\.update$/
+      @sendSoon name, message
+    else
+      @sendNow name, message
 
+  sendNow: (name, message) =>
     logmsg = "send: #{name} - #{JSON.stringify(message)}"
     if name == 'card.update' or name == 'group.update'
       @logger.debug logmsg
     else
       @logger.info logmsg
-
     @metrics.track name, message
     @socket.emit name, message
+
+  sendSoon: (name, message) =>
+    merge = (oldMessage, newMessage) ->
+      _(oldMessage).extend newMessage
+
+    key = "#{name}-#{message._id}"
+    @sendQueue[key] = merge(@sendQueue[key] ? {}, message)
+
+  sendAll: () =>
+    extract = (key) -> key.substr(0, key.indexOf("-"))
+    @sendNow(extract(key), message) for key, message of @sendQueue
+    @sendQueue = {}
 
   onConnect: =>
     @logger.debug 'onConnect'
