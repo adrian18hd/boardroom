@@ -175,7 +175,8 @@ class boardroom.Handler
     card.get('group').get('cards').remove card, { rebroadcast: true }
 
   userMessage: () =>
-    @user.toJSON()
+    user: @user.toJSON()
+    boardId: @board.id
 
   boardMessage: () =>
     message = _(@board.toJSON()).pick('_id', 'name')

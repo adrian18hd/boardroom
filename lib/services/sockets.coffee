@@ -7,42 +7,37 @@ Card = require '../models/card'
 
 class Sockets
   @users: {}
-  @info: {}
 
-  @middleware: (request, _, next) =>
-    @createSocket request.params.id
-    next()
+  @boardsNamespace: () ->
+    env = process.env.NODE_ENV ? 'development'
+    "/#{env}/boards"
 
-  @createSocket: (boardId) ->
-    return if @socketInfo boardId
-
+  @createSocket: (io) ->
     handlers =
       board: Board
       group: Group
       card : Card
 
-    env = process.env.NODE_ENV ? 'development'
-    namespace = "/#{env}/boards/#{boardId}"
-    @info[boardId] = { namespace }
+    namespace = @boardsNamespace()
 
-    boardNamespace = @io
+    io
       .of(namespace)
       .on 'connection', (socket) =>
         remoteAddress = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address
         logger.debug -> "Socket connection from #{remoteAddress} (pid #{process.pid})"
 
-        for name, modelClass of handlers
-          handler = new Handler modelClass, name, boardId, socket
-          handler.registerAll()
-
         socket.on 'disconnect', =>
           delete @users[socket.boardroomUser?.id]
           logger.info -> "#{socket.boardroomUser?.displayName} has disconnected"
 
-        socket.on 'join', (user) =>
+        socket.on 'join', (message) =>
+          { user, boardId } = message
+          new Handler(modelClass, name, boardId, socket).registerAll() for name, modelClass of handlers
+
+          socket.join boardId
           @users[user.userId] = user
           socket.boardroomUser = user
-          boardNamespace.emit 'join', { userId: user.userId, @users }
+          io.sockets.in(boardId).emit 'join', { userId: user.userId, @users }
           logger.info -> "#{user.displayName} has joined board #{boardId} (pid: #{process.pid})"
 
         socket.on 'log', ({user, boardId, level, msg}) =>
@@ -51,8 +46,7 @@ class Sockets
         socket.on 'marker', ({user, boardId}) =>
           logger.rememberEvent boardId, 'marker', { author: user }
 
-  @socketInfo: (boardId) ->
-    @info[boardId]
+  @joinRoom: (user, boardId) =>
 
   @start: (server) ->
     RedisStore = require 'socket.io/lib/stores/redis'
@@ -63,8 +57,10 @@ class Sockets
       redisSub: redis.createClient()
       redisClient: redis.createClient()
 
-    @io = sockets.listen server
-    @io.set 'log level', 1
-    @io.set 'store', store
+    io = sockets.listen server
+    io.set 'log level', 1
+    io.set 'store', store
+
+    @createSocket io
 
 module.exports = Sockets

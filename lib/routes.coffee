@@ -4,7 +4,7 @@ ContentsController = require './controllers/contents'
 SessionsController = require './controllers/sessions'
 BoardsController = require './controllers/boards'
 
-addRouting = (env, app, loginProtection, createSocketNamespace) ->
+addRouting = (env, app, loginProtection) ->
   homeController = new HomeController
   app.get '/', loginProtection, homeController.index
 
@@ -19,9 +19,9 @@ addRouting = (env, app, loginProtection, createSocketNamespace) ->
   app.get '/oauth/:provider/callback', sessionsController.createOAuth
 
   boardsController = new BoardsController
-  app.get '/boards/:id.csv', loginProtection, createSocketNamespace, boardsController.downloadCSV
-  app.get '/boards/:id', loginProtection, createSocketNamespace, boardsController.show
-  app.get '/boards/:id/warm', createSocketNamespace, boardsController.warm unless env == 'production'
+  app.get '/boards/:id.csv', loginProtection, boardsController.downloadCSV
+  app.get '/boards/:id', loginProtection, boardsController.show
+  app.get '/boards/:id/warm', boardsController.warm unless env == 'production'
   app.post '/boards/:id', loginProtection, boardsController.destroy
   app.post '/boards', loginProtection, boardsController.create
 
