@@ -2,7 +2,7 @@ cluster = require 'cluster'
 sh = require 'execSync'
 
 logger = require './services/logger'
-logger.setLevel( process.env.LOG_LEVEL ? 'info' )
+logger.setLevel( process.env.LOGLEVEL ? 'info' )
 
 env = process.env.NODE_ENV ? 'development'
 port = process.env.PORT ? 7777

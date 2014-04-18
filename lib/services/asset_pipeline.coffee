@@ -51,10 +51,10 @@ class AssetRack extends rack.Rack
     complete = yielded = false
     asset = _(@assets).find (asset) -> asset.lookup == ident
     if asset?
-      logger.debug -> "Found asset: #{ident}"
+      #logger.debug -> "Found asset: #{ident}"
       return asset
     else
-      logger.debug -> "Creating asset: #{ident}"
+      #logger.debug -> "Creating asset: #{ident}"
       done = false
       asset = @factory.create type, name, contents
       asset.rack = @
@@ -69,7 +69,7 @@ class AssetRack extends rack.Rack
       asset.on 'complete', =>
         @assets.push asset if asset.contents?
         @assets = @assets.concat asset.assets if asset.assets?
-        logger.debug -> "Asset compiled: #{ident}"
+        #logger.debug -> "Asset compiled: #{ident}"
         complete = true
         fiber.run() if yielded
       unless complete
