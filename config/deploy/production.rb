@@ -4,4 +4,4 @@ secrets = %w(TWITTER_SECRET GOOGLE_CLIENT_SECRET FACEBOOK_APP_SECRET).map { |s| 
 set :branch, 'master'
 set :deploy_to, dir
 set :node_env, 'production'
-set :app_environment, "PORT=1337 #{secrets}"
+set :app_environment, "CPUS=2 PORT=1337 #{secrets}"
