@@ -37,7 +37,7 @@ class Sockets
           socket.join boardId
           @users[user.userId] = user
           socket.boardroomUser = user
-          io.sockets.in(boardId).emit 'join', { userId: user.userId, @users }
+          socket.broadcast.to(boardId).emit 'join', { userId: user.userId, @users }
           logger.info -> "#{user.displayName} has joined board #{boardId} (pid: #{process.pid})"
 
         socket.on 'log', ({user, boardId, level, msg}) =>
@@ -45,8 +45,6 @@ class Sockets
 
         socket.on 'marker', ({user, boardId}) =>
           logger.rememberEvent boardId, 'marker', { author: user }
-
-  @joinRoom: (user, boardId) =>
 
   @start: (server) ->
     RedisStore = require 'socket.io/lib/stores/redis'

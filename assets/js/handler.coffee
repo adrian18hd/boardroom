@@ -109,7 +109,6 @@ class boardroom.Handler
   onReconnect: =>
     @logger.debug 'onReconnect'
     @board.set 'status', null
-    @send 'join', @userMessage()
 
   onJoin: (message) =>
     @logger.debug 'onJoin'
