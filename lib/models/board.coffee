@@ -58,7 +58,7 @@ BoardSchema.statics =
 BoardSchema.methods =
   cards: ->
     cards = []
-    cards = cards.concat(group.cards) for group in @groups
+    cards = cards.concat(group.cards) for group in @groups when group?
     _(cards).compact()
 
   collaborators: ->
@@ -76,15 +76,10 @@ BoardSchema.methods =
     up
 
   toCSV: ->
-    board = @toObject getters: true
-    csvData = []
-    csvData.push ['Group', 'Card']
-    for group in board.groups
-      for card in group.cards
-        cardData = []
-        cardData.push group.name
-        cardData.push card.text
-        csvData.push cardData
+    csvData = [ ['Group', 'Card'] ]
+    for group in _(@groups).compact()
+      for card in _(group.cards).compact()
+        csvData.push [ group.name, card.text ]
     csvData
 
   updateAttributes: (attributes, callback) ->
