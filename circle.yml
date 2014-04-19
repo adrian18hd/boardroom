@@ -6,4 +6,5 @@ deployment:
   production:
     branch: master
     commands:
-      - cap production deploy
+      - cap production1 deploy
+      - cap production2 deploy
